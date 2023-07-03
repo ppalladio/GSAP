@@ -1,6 +1,14 @@
 import React from 'react';
 
 const SoundSection = () => {
+    // const handleDisplaySection = () => {
+    //     const el = document.querySelector('.display-section');
+    //     window.scrollTo({
+    //         top: el?.getBoundingClientRect().top,
+    //         left: 0,
+    //         behavior: 'smooth',
+    //     });
+    // };
     return (
         <div className="sound-section wrapper">
             <div className="body">
@@ -10,6 +18,15 @@ const SoundSection = () => {
                     <span className="description capitalize">
                         from $41.62/mo. for 24 mo. or $999 before trade-in
                     </span>
+
+                    <ul className="links">
+                        <li>
+                            <button className="button">Buy</button>
+                        </li>
+                        <li>
+                            <a className="link capitalize" >learn more</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
