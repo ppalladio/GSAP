@@ -9,7 +9,6 @@ import React, {
 import {
     ViewerApp,
     AssetManagerPlugin,
-    CanvasSnipperPlugin,
     GBufferPlugin,
     ProgressivePlugin,
     TonemapPlugin,
@@ -17,10 +16,9 @@ import {
     SSAOPlugin,
     BloomPlugin,
     GammaCorrectionPlugin,
-    addBasePlugins,
     mobileAndTabletCheck,
 } from 'webgi';
-import  gsap  from 'gsap';
+import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const WebgiViewer = () => {
@@ -32,17 +30,37 @@ const WebgiViewer = () => {
         });
 
         // Add some plugins
-        const  manager = await viewer.addPlugin(AssetManagerPlugin);
-        await addBasePlugins(viewer);
+        const manager = await viewer.addPlugin(AssetManagerPlugin);
 
-        // Add more plugins not available in base, like CanvasSnipperPlugin which has helpers to download an image of the canvas.
-        await viewer.addPlugin(CanvasSnipperPlugin);
- 
+        const camera = viewer.scene.activeCamera;
+        const position = camera.position;
+        const target = camera.target;
+
+        await viewer.addPlugin(GBufferPlugin);
+        await viewer.addPlugin(new ProgressivePlugin(32));
+        await viewer.addPlugin(SSAOPlugin);
+        await viewer.addPlugin(new TonemapPlugin(!viewer.useRgbm));
+        await viewer.addPlugin(SSRPlugin);
+        await viewer.addPlugin(GammaCorrectionPlugin);
+        await viewer.addPlugin(BloomPlugin);
+
         // This must be called once after all plugins are added.
         viewer.renderer.refreshPipeline();
 
         // Import and add a GLB file.
         await manager.addFromPath('scene-black.glb');
+
+        viewer.getPlugin(TonemapPlugin).config.clipBackground = true;
+
+        viewer.scene.activeCamera.setCameraOptions({ controlsEnabled: false });
+
+        window.scrollTo(0, 0);
+
+        let needsUpdate = true;
+        viewer.addEventListener('preFrame', () => {
+			
+            camera.positionTargetUpdated(true);
+        });
     }, []);
 
     useEffect(() => {
