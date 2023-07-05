@@ -25,24 +25,26 @@ import { scrollAnimation } from '../lib/scroll-animation';
 gsap.registerPlugin(ScrollTrigger);
 
 const WebgiViewer = forwardRef((props, ref) => {
-
     const canvasRef = useRef(null);
     const [viewerRef, setViewerRef] = useState(null);
     const [targetRef, setTargetRef] = useState(null);
     const [cameraRef, setCameraRef] = useState(null);
     const [positionRef, setPositionRef] = useState(null);
-   
-	useImperativeHandle(
+    const canvasContainerRef = useRef(null);
+
+    useImperativeHandle(
         ref,
         () => ({
             triggerPreview() {
+                canvasContainerRef.current.style.pointerEvents = 'all';
+                props.contentRef.current.style.opacity = '0';
                 gsap.to(positionRef, {
                     x: 13.04,
                     y: -2.01,
                     z: 2.29,
                     duration: 2,
                     onUpdate: () => {
-                        viewerRef.setDirty();//@it works from time to time
+                        viewerRef.setDirty(); //@it works from time to time
                         cameraRef.positionTargetUpdated(true);
                     },
                 });
@@ -52,6 +54,9 @@ const WebgiViewer = forwardRef((props, ref) => {
                     y: 0.0,
                     z: 0,
                     duration: 2,
+                });
+                viewerRef.scene.activeCamera.setCameraOptions({
+                    controlsEnabled: true,
                 });
             },
         }),
@@ -118,7 +123,7 @@ const WebgiViewer = forwardRef((props, ref) => {
     }, []);
 
     return (
-        <div id="webgi-canvas-container">
+        <div id="webgi-canvas-container" ref={canvasContainerRef}>
             <canvas id="webgi-canvas" ref={canvasRef}></canvas>
         </div>
     );
