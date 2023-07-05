@@ -8,13 +8,9 @@ const DisplaySection = () => {
             <span className="description capitalize">
                 a display that's up to 2x brighter in the sun.
             </span>
-			<button className='button'>
-Try Me!
-			</button>
-       <button className='button'>
-TOP
-	   </button>
-	    </div>
+            <button className="button">Try Me!</button>
+            <button className="back-button">TOP</button>
+        </div>
     );
 };
 
