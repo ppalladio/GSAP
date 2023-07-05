@@ -21,10 +21,42 @@ import {
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { scrollAnimation } from '../lib/scroll-animation';
-gsap.registerPlugin(ScrollTrigger);
-const WebgiViewer = () => {
-    const canvasRef = useRef(null);
 
+gsap.registerPlugin(ScrollTrigger);
+
+const WebgiViewer = forwardRef((props, ref) => {
+
+    const canvasRef = useRef(null);
+    const [viewerRef, setViewerRef] = useState(null);
+    const [targetRef, setTargetRef] = useState(null);
+    const [cameraRef, setCameraRef] = useState(null);
+    const [positionRef, setPositionRef] = useState(null);
+   
+	useImperativeHandle(
+        ref,
+        () => ({
+            triggerPreview() {
+                gsap.to(positionRef, {
+                    x: 13.04,
+                    y: -2.01,
+                    z: 2.29,
+                    duration: 2,
+                    onUpdate: () => {
+                        viewerRef.setDirty();//@it works from time to time
+                        cameraRef.positionTargetUpdated(true);
+                    },
+                });
+
+                gsap.to(targetRef, {
+                    x: 0.11,
+                    y: 0.0,
+                    z: 0,
+                    duration: 2,
+                });
+            },
+        }),
+        [],
+    );
     const memorizedScrollAnimation = useCallback(
         (position, target, onUpdate) => {
             if (position && target && onUpdate) {
@@ -38,14 +70,16 @@ const WebgiViewer = () => {
         const viewer = new ViewerApp({
             canvas: canvasRef.current,
         });
-
+        setViewerRef(viewer);
         // Add some plugins
         const manager = await viewer.addPlugin(AssetManagerPlugin);
 
         const camera = viewer.scene.activeCamera;
+        setCameraRef(camera);
         const position = camera.position;
+        setPositionRef(position);
         const target = camera.target;
-
+        setTargetRef(target);
         await viewer.addPlugin(GBufferPlugin);
         await viewer.addPlugin(new ProgressivePlugin(32));
         await viewer.addPlugin(SSAOPlugin);
@@ -88,6 +122,6 @@ const WebgiViewer = () => {
             <canvas id="webgi-canvas" ref={canvasRef}></canvas>
         </div>
     );
-};
+});
 
 export default WebgiViewer;
