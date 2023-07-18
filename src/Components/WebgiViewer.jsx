@@ -36,31 +36,33 @@ const WebgiViewer = forwardRef((props, ref) => {
         ref,
         () => ({
             triggerPreview() {
-                canvasContainerRef.current.style.pointerEvents = 'all';
-                props.contentRef.current.style.opacity = '0';
-                gsap.to(positionRef, {
-                    x: 13.04,
-                    y: -2.01,
-                    z: 2.29,
-                    duration: 2,
-                    onUpdate: () => {
-                        viewerRef.setDirty(); //@it works from time to time
-                        cameraRef.positionTargetUpdated(true);
-                    },
-                });
+                if (viewerRef && viewerRef.scene) {
+                    canvasContainerRef.current.style.pointerEvents = 'all';
+                    props.contentRef.current.style.opacity = '0';
+                    gsap.to(positionRef, {
+                        x: 13.04,
+                        y: -2.01,
+                        z: 2.29,
+                        duration: 2,
+                        onUpdate: () => {
+                            viewerRef.setDirty();
+                            cameraRef.positionTargetUpdated(true);
+                        },
+                    });
 
-                gsap.to(targetRef, {
-                    x: 0.11,
-                    y: 0.0,
-                    z: 0,
-                    duration: 2,
-                });
-                viewerRef.scene.activeCamera.setCameraOptions({
-                    controlsEnabled: true,
-                });
+                    gsap.to(targetRef, {
+                        x: 0.11,
+                        y: 0.0,
+                        z: 0,
+                        duration: 2,
+                    });
+                    viewerRef.scene.activeCamera.setCameraOptions({
+                        controlsEnabled: true,
+                    });
+                }
             },
         }),
-        [],
+        [viewerRef, positionRef, targetRef, cameraRef, props.contentRef],
     );
     const memorizedScrollAnimation = useCallback(
         (position, target, onUpdate) => {
@@ -76,7 +78,7 @@ const WebgiViewer = forwardRef((props, ref) => {
             canvas: canvasRef.current,
         });
         setViewerRef(viewer);
-        // Add some plugins
+
         const manager = await viewer.addPlugin(AssetManagerPlugin);
 
         const camera = viewer.scene.activeCamera;
