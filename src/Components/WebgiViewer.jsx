@@ -113,7 +113,7 @@ const WebgiViewer = forwardRef((props, ref) => {
         if (isMobileOrTablet) {
             position.set(-16.7, 1.17, 11.7);
             target.set(0, 1.37, 0);
-            props.contentRef, (current.className = 'mobile-or-tablet');
+            props.contentRef.current.className = 'mobile-or-tablet';
         }
 
         window.scrollTo(0, 0);
@@ -145,7 +145,7 @@ const WebgiViewer = forwardRef((props, ref) => {
             gsap.to(positionRef, {
                 x: !isMobile ? 1.56 : 9.36,
                 y: !isMobile ? 5.0 : 10.95,
-                z: !isMobile ? 0.01 : 0,
+                z: !isMobile ? 0.01 : 0.09,
                 scrollTrigger: {
                     trigger: '.display-section',
                     start: 'top bottom',
@@ -177,7 +177,6 @@ const WebgiViewer = forwardRef((props, ref) => {
             <canvas id="webgi-canvas" ref={canvasRef}></canvas>
             {previewMode && (
                 <button className="button" onClick={handleExit}>
-                    {' '}
                     Exit
                 </button>
             )}

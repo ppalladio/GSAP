@@ -4,6 +4,7 @@ import SoundSection from './Components/SoundSection';
 import DisplaySection from './Components/DisplaySection';
 import WebgiViewer from './Components/WebgiViewer';
 import { useRef } from 'react';
+import Loader from './Components/Loader';
 function App() {
     const webgiViewerRef = useRef();
     const contentRef = useRef();

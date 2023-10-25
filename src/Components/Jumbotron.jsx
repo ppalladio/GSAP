@@ -23,7 +23,7 @@ const Jumbotron = () => {
                     <button className="button">Buy</button>
                 </li>
                 <li>
-                    <a className="link" onClick={handleLearnMore}>Learn more</a>
+                    <a className="link" alt='learn-more' onClick={handleLearnMore}>Learn more</a>
                 </li>
             </ul>
             <img src={HoldingIphone} className="iphone-img" alt="iphone" />
